@@ -1,0 +1,39 @@
+﻿@page
+@model RazorPages.Pages.TestimonialsModel
+@{
+    ViewData["Title"] = "Testimonials";
+}
+
+<div class="banner-area banner-bg-1">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="banner">
+                    <h2>Testimonials</h2>
+                    <ul class="page-title-link">
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">Testimonials</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="test-box" class="section wb">
+    <div class="container">
+        <partial name="Shared/_TestimonialsHeader.cshtml" />
+    </div>
+</div>
+
+<div id="testimonials" class="parallax section db parallax-off" style="background-image:url('uploads/parallax_03.jpg');">
+    <div class="container">
+        <div class="section-title text-center">
+            <h3>Our Clients</h3>
+            <p class="lead">We thanks for all our awesome testimonials! There are hundreds of our happy customers! <br>Let's see what others say about GoodWEB Solutions website template!</p>
+        </div>
+
+        <partial name="Shared/_TestimonialsFooter.cshtml" />    
+
+    </div>
+</div>

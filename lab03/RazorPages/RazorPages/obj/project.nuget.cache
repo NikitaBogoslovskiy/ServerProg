@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "nGDL+AZ1NyKmWeqBO99hWbIO/Z3FinqEBNDRZVGv74LQRw2msg2HfX7+cdqwcXMsTv8Bvr5NAz32QR2+Oo/XSw==",
+  "dgSpecHash": "4DLx0huyoIwrp6IvshUUys0aoYy2V49uKPRVI4E4K1j8n/T8klgGKpgORWCfd6IyQIzVq9kYIEhoiHyR1WXvsg==",
   "success": true,
   "projectFilePath": "C:\\Content\\mmcs\\masters_degree\\semester_2\\server_programming\\lab03\\RazorPages\\RazorPages\\RazorPages.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\nikit\\.nuget\\packages\\csvhelper\\31.0.2\\csvhelper.31.0.2.nupkg.sha512",
     "C:\\Users\\nikit\\.nuget\\packages\\humanizer\\2.14.1\\humanizer.2.14.1.nupkg.sha512",
     "C:\\Users\\nikit\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\nikit\\.nuget\\packages\\humanizer.core.af\\2.14.1\\humanizer.core.af.2.14.1.nupkg.sha512",

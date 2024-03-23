@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "JXk4fLs1gfk5IagXolEBE/Law/muiCYDIsLR9/FF+iw=",
+  "Hash": "DiIyQ50240JRyVPQjXR5HrQ2I7aGtkaa8B1hlpgJVEM=",
   "Source": "RazorPages",
   "BasePath": "_content/RazorPages",
   "Mode": "Default",
@@ -2429,6 +2429,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\lib\\jquery-validation-unobtrusive\\LICENSE.txt"
+    },
+    {
+      "Identity": "C:\\Content\\mmcs\\masters_degree\\semester_2\\server_programming\\lab03\\RazorPages\\RazorPages\\wwwroot\\PortfolioContent.json",
+      "SourceId": "RazorPages",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Content\\mmcs\\masters_degree\\semester_2\\server_programming\\lab03\\RazorPages\\RazorPages\\wwwroot\\",
+      "BasePath": "_content/RazorPages",
+      "RelativePath": "PortfolioContent.json",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\PortfolioContent.json"
     },
     {
       "Identity": "C:\\Content\\mmcs\\masters_degree\\semester_2\\server_programming\\lab03\\RazorPages\\RazorPages\\wwwroot\\style.css",

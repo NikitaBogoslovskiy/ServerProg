@@ -1,0 +1,70 @@
+{
+	"Banner": {
+		"Title": "Our Portfolio",
+		"MainPage": "Home",
+		"ThisPage": "Our Portfolio"
+	},
+	"Header": {
+		"Title": "Our Portfolio",
+		"Description": ["We build professional website templates, web design projects, material designs and UI kits.", "Some of our awesome completed projects in below."]
+	},
+	"Filters": [
+		"All",
+		"Design",
+		"Mockup",
+		"Logos",
+		"HTML"
+	],
+	"ProjectCards": [
+		{
+			"Title": "Seahorse by Trevor",
+			"Subtitle": "Web Design",
+			"ImagePath": "uploads/portfolio_01.jpg"
+		},
+		{
+			"Title": "Tradested Mockop",
+			"Subtitle": "Graphic Design",
+			"ImagePath": "uploads/portfolio_02.jpg"
+		},
+		{
+			"Title": "Photography Material",
+			"Subtitle": "Photography",
+			"ImagePath": "uploads/portfolio_03.jpg"
+		},
+		{
+			"Title": "Responsive Menu",
+			"Subtitle": "UI Design",
+			"ImagePath": "uploads/portfolio_04.jpg"
+		},
+		{
+			"Title": "SnowMaker App",
+			"Subtitle": "Application",
+			"ImagePath": "uploads/portfolio_05.jpg"
+		},
+		{
+			"Title": "3D Mockups",
+			"Subtitle": "Graphic Design",
+			"ImagePath": "uploads/portfolio_06.jpg"
+		},
+		{
+			"Title": "Best of Design",
+			"Subtitle": "Web Design",
+			"ImagePath": "uploads/portfolio_07.jpg"
+		},
+		{
+			"Title": "Admin Dashboard",
+			"Subtitle": "Admin Template",
+			"ImagePath": "uploads/portfolio_08.jpg"
+		},
+		{
+			"Title": "Radio Mockup",
+			"Subtitle": "Graphic Design",
+			"ImagePath": "uploads/portfolio_09.jpg"
+		},
+		{
+			"Title": "Danny Jeffers",
+			"Subtitle": "Web Design",
+			"ImagePath": "uploads/portfolio_10.jpg"
+		}
+	]
+}

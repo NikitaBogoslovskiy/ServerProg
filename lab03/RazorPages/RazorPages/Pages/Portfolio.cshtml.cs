@@ -6,34 +6,6 @@ using Newtonsoft.Json.Linq;
 
 namespace RazorPages.Pages
 {
-/*    public class Banner
-    {
-        public string Title { get; set; }
-        public string MainPage { get; set; }
-        public string ThisPage { get; set; }
-    }
-
-    public class Header
-    {
-        public string Title { get; set; }
-        public string Description { get; set; }
-    }
-
-    public class ProjectCard
-    {
-        public string Title { get; set; }
-        public string Subtitle { get; set; }
-        public string ImagePath { get; set; }
-    }
-
-    public class PortfolioContent
-    {
-        public Banner Banner { get; set; }
-        public Header Header { get; set; }
-        public List<string> Filters { get; set; }
-        public List<ProjectCard> ProjectCards { get; set; }
-    }*/
-
     public interface IContentService
     {
         public void Load(string path);

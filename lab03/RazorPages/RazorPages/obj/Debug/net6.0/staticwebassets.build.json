@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "DiIyQ50240JRyVPQjXR5HrQ2I7aGtkaa8B1hlpgJVEM=",
+  "Hash": "CDHE9yfyaVUCGT7f4He8tnhxaKZD6RTZrwKV9HAKhc0=",
   "Source": "RazorPages",
   "BasePath": "_content/RazorPages",
   "Mode": "Default",
@@ -2497,6 +2497,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\uploads\\about_02.jpg"
+    },
+    {
+      "Identity": "C:\\Content\\mmcs\\masters_degree\\semester_2\\server_programming\\lab03\\RazorPages\\RazorPages\\wwwroot\\uploads\\default_image.png",
+      "SourceId": "RazorPages",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Content\\mmcs\\masters_degree\\semester_2\\server_programming\\lab03\\RazorPages\\RazorPages\\wwwroot\\",
+      "BasePath": "_content/RazorPages",
+      "RelativePath": "uploads/default_image.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\default_image.png"
     },
     {
       "Identity": "C:\\Content\\mmcs\\masters_degree\\semester_2\\server_programming\\lab03\\RazorPages\\RazorPages\\wwwroot\\uploads\\device_03.png",

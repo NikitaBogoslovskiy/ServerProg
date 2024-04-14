@@ -20,6 +20,56 @@
     </div>
 </div>
 
+<div id="new_testimonial" class="section wb">
+    <div class="container">
+        <div class="section-title text-center">
+            <h3>Give us feedback</h3>
+            <p class="lead">Your opinion is incredibly important for us (not really, actually). Write your opinion about our company and we for sure... will not take it into account.</p>
+        </div><!-- end title -->
+
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <div class="contact_form">
+                    <div id="message"></div>
+                    <form class="col-9" method="post" enctype="multipart/form-data">
+                        <div class="form-group mb-3">
+                            <label asp-for="@Model.InputForm.Name" class="form-label"></label>
+                            <br />
+                            <span asp-validation-for="@Model.InputForm.Name"></span>
+                            <input type="text" asp-for="@Model.InputForm.Name" class="form-control" />
+                        </div>
+                        <div class="form-group mb-3">
+                            <label asp-for="@Model.InputForm.Occupation" class="form-label"></label>
+                            <br />
+                            <span asp-validation-for="@Model.InputForm.Occupation"></span>
+                            <input asp-for="@Model.InputForm.Occupation" class="form-control" />
+                        </div>
+                        <div class="form-group mb-3">
+                            <label asp-for="@Model.InputForm.Title" class="form-label"></label>
+                            <br />
+                            <span asp-validation-for="@Model.InputForm.Title"></span>
+                            <input asp-for="@Model.InputForm.Title" class="form-control" />
+                        </div>
+                        <div class="form-group mb-3">
+                            <label asp-for="@Model.InputForm.Description" class="form-label"></label>
+                            <br />
+                            <span asp-validation-for="@Model.InputForm.Description"></span>
+                            <input asp-for="@Model.InputForm.Description" class="form-control" />
+                        </div>
+                        <div class="form-group mb-3">
+                            <label asp-for="@Model.InputForm.Image" class="form-label"></label>
+                            <br />
+                            <span asp-validation-for="@Model.InputForm.Image"></span>
+                            <input asp-for="@Model.InputForm.Image" class="form-control" />
+                        </div>
+                        <button type="submit" class="btn bn-sm btn-primary">Submit</button>
+                    </form>
+                </div>
+            </div><!-- end col -->
+        </div><!-- end row -->
+    </div><!-- end container -->
+</div>
+
 <div id="test-box" class="section wb">
     <div class="container">
         <partial name="Shared/_TestimonialsHeader.cshtml" />

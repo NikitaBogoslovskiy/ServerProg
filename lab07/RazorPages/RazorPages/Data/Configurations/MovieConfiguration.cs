@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
 using RazorPages.Models;
+using Microsoft.Extensions.Hosting;
+using System.Reflection.Emit;
 
 namespace RazorPages.Data.Configurations
 {
@@ -9,7 +11,7 @@ namespace RazorPages.Data.Configurations
         public void Configure(EntityTypeBuilder<Movie> builder)
         {
             builder.ToTable("movie");
-            builder.Property(x => x.Id).HasColumnName("movie_id");
+            builder.Property(x => x.Id).HasColumnName("movie_id").ValueGeneratedOnAdd();
             builder.Property(x => x.Title).HasColumnName("title");
             builder.Property(x => x.Budget).HasColumnName("budget");
             builder.Property(x => x.Homepage).HasColumnName("homepage");

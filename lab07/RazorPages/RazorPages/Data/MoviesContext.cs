@@ -6,7 +6,9 @@ namespace RazorPages.Data
 {
     public class MoviesContext : DbContext
     {
+        public DbSet<MoviePerson> MoviePersons { get; set; } = default!;
         public DbSet<Movie> Movies { get; set; } = default!;
+        public DbSet<Person> Persons { get; set; } = default!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -15,7 +17,14 @@ namespace RazorPages.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.ApplyConfiguration(new MoviePersonConfiguration());
             modelBuilder.ApplyConfiguration(new MovieConfiguration());
+            modelBuilder.ApplyConfiguration(new PersonConfiguration());
+
+            modelBuilder.Entity<Movie>()
+                .HasMany(e => e.Persons)
+                .WithMany(e => e.Movies)
+                .UsingEntity<MoviePerson>();
         }
     }
 }

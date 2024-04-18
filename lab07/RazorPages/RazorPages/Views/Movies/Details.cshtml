@@ -1,7 +1,7 @@
 ﻿@model RazorPages.Models.Movie
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = Model.Title;
 }
 
 <div>
@@ -115,6 +115,23 @@
             </dt>
             <dd class = "col-sm-10">
                 @Html.DisplayFor(model => model.VoteCount)
+            </dd>
+        }
+
+        @if (Model.Persons != null && Model.Persons.Count != 0)
+        {
+            <dt class="col-sm-2">
+                Actors
+            </dt>
+            <dd class="col-sm-10">
+                <ul>
+                    @foreach (var p in Model.Persons)
+                    {
+                        <li>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Persons" asp-action="Details" asp-route-id="@p.Id">@p.Name (@(Model.MoviePersons.First(x => x.PersonId == p.Id).CharacterName))</a>
+                        </li>
+                    }
+                </ul>
             </dd>
         }
     </dl>

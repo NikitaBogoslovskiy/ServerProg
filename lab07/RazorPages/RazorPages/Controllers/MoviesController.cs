@@ -35,7 +35,7 @@ namespace RazorPages.Controllers
                 return NotFound();
             }
 
-            var movie = await _context.Movies
+            var movie = await _context.Movies.Include("Persons")
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (movie == null)
             {
@@ -60,6 +60,7 @@ namespace RazorPages.Controllers
         {
             if (ModelState.IsValid)
             {
+                movie.Id = _context.Movies.Select(m => m.Id).Max() + 1;
                 _context.Add(movie);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -148,10 +149,16 @@ namespace RazorPages.Controllers
             var movie = await _context.Movies.FindAsync(id);
             if (movie != null)
             {
+                var mps = _context.MoviePersons.Where(x => x.MovieId == movie.Id);
+                if (mps.Any())
+                {
+                    _context.MoviePersons.RemoveRange(mps);
+                    await _context.SaveChangesAsync();
+                }
                 _context.Movies.Remove(movie);
+                await _context.SaveChangesAsync();
             }
             
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 

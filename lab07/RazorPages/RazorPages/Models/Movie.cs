@@ -15,5 +15,8 @@
         public string? Tagline { get; set; }
         public string? VoteAverage { get; set; }
         public string? VoteCount { get; set; }
+
+        public List<Person>? Persons { get; set; }
+        public List<MoviePerson>? MoviePersons { get; set; }
     }
 }

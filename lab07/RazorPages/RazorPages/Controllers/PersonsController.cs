@@ -11,7 +11,6 @@ using RazorPages.Models;
 
 namespace RazorPages.Controllers
 {
-    [Authorize(AuthenticationSchemes = "Bearer")]
     public class PersonsController : Controller
     {
         private readonly MoviesContext _context;
@@ -30,6 +29,7 @@ namespace RazorPages.Controllers
         }
 
         // GET: Persons/Details/5
+        [Authorize(Roles = "User")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Persons == null)
@@ -58,6 +58,7 @@ namespace RazorPages.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([Bind("Id,Name")] Person person)
         {
             if (ModelState.IsValid)
@@ -71,6 +72,7 @@ namespace RazorPages.Controllers
         }
 
         // GET: Persons/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Persons == null)
@@ -91,6 +93,7 @@ namespace RazorPages.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Person person)
         {
             if (id != person.Id)
@@ -122,6 +125,7 @@ namespace RazorPages.Controllers
         }
 
         // GET: Persons/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Persons == null)
@@ -142,6 +146,7 @@ namespace RazorPages.Controllers
         // POST: Persons/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.Persons == null)

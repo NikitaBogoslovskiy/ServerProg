@@ -4,9 +4,12 @@
     ViewData["Title"] = "Movies";
 }
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+@if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+{
+    <p>
+        <a asp-action="Create">Create New</a>
+    </p>
+}
 <table class="table">
     <thead>
         <tr>
@@ -35,11 +38,20 @@
                 @Html.DisplayFor(modelItem => item.VoteCount)
             </td>
             <td>
-                @if (User.Identity.Name == "")
+                @if (User.Identity.IsAuthenticated)
                 {
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a><text> |</text>
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a><text> |</text>
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    if (User.IsInRole("Admin"))
+                    {
+                         <a asp-action="Edit" asp-route-id="@item.Id">Edit</a><text> </text>
+                    }
+                    if (User.IsInRole("User"))
+                    {
+                        <a asp-action="Details" asp-route-id="@item.Id">Details</a><text> </text>
+                    }
+                    if (User.IsInRole("Admin"))
+                    {
+                         <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    }
                 }
             </td>
         </tr>

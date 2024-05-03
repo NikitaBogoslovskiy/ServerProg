@@ -21,7 +21,6 @@ namespace RazorPages.Controllers
     {
         private readonly MoviesContext _context;
         public List<Movie> Movies;
-        public string role;
 
         public MoviesController(MoviesContext context)
         {
@@ -31,7 +30,7 @@ namespace RazorPages.Controllers
         // GET: Movies
         public async Task<IActionResult> Index()
         {
-            return _context.Movies != null ? 
+            return _context.Movies != null ?
                         View(await _context.Movies.ToListAsync()) :
                         Problem("Entity set 'MoviesContext.Movies'  is null.");
         }

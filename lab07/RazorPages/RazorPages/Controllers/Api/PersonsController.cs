@@ -33,7 +33,7 @@ namespace RazorPages.Controllers.Api
             }));
         }
 
-        //[Authorize(Roles = "User")]
+        [Authorize(Roles = "User", AuthenticationSchemes = "Bearer")]
         [HttpGet("{id}")]
         public async Task<IActionResult> Details(int? id)
         {
@@ -52,8 +52,7 @@ namespace RazorPages.Controllers.Api
             return Ok(person);
         }
 
-        //[ValidateAntiForgeryToken]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin", AuthenticationSchemes = "Bearer")]
         [HttpPost("create")]
         public async Task<IActionResult> Create(Person person)
         {
@@ -68,8 +67,7 @@ namespace RazorPages.Controllers.Api
         }
 
         [HttpPut("update/{id}")]
-        //[ValidateAntiForgeryToken]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin", AuthenticationSchemes = "Bearer")]
         public async Task<IActionResult> Edit(int? id, Person person)
         {
             person.Id = id.Value;
@@ -97,8 +95,7 @@ namespace RazorPages.Controllers.Api
         }
 
         [HttpDelete("delete/{id}")]
-        //[ValidateAntiForgeryToken]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin", AuthenticationSchemes = "Bearer")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (_context.Persons == null)

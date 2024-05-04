@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using NuGet.Common;
 using RazorPages.Controllers;
+using RazorPages.Controllers.Data;
 using RazorPages.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -15,16 +16,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = true,
-            ValidIssuer = AuthOptions.ISSUER,
-            ValidateAudience = true,
-            ValidAudience = AuthOptions.AUDIENCE,
-            ValidateLifetime = true,
-            IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
-            ValidateIssuerSigningKey = true
-        };
+        options.TokenValidationParameters = Auth.TokenValidationParameters;
     });
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpContextAccessor();
@@ -47,11 +39,24 @@ if (!app.Environment.IsDevelopment())
 app.UseSession();
 app.Use(async (context, next) =>
 {
-    var token = context.Session.GetString("Token");
+    var token = Auth.GetTokenFromCookies(context);
     if (!string.IsNullOrEmpty(token))
     {
-        context.Request.Headers.Add("Authorization", "Bearer " + token);
-        context.User = new ClaimsPrincipal(new ClaimsIdentity(new JwtSecurityTokenHandler().ReadJwtToken(token).Claims, "Bearer"));
+        var tokenHandler = new JwtSecurityTokenHandler();
+        try
+        {
+            context.User = tokenHandler.ValidateToken(token, Auth.TokenValidationParameters, out var securityToken);
+        }
+        catch(SecurityTokenExpiredException) 
+        {
+            token = Auth.ConvertJwtToToken(Auth.GenerateJwt(tokenHandler.ReadJwtToken(token).Claims.ToList()));
+            Auth.AddTokenToCookies(context, token);
+            context.User = tokenHandler.ValidateToken(token, Auth.TokenValidationParameters, out var securityToken);
+        }
+        catch (Exception)
+        {
+            Auth.DeleteTokenFromCookies(context);
+        }
     }
     await next();
 });

@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.IdentityModel.Tokens;
 using RazorPages.Controllers.Utils;
+using RazorPages.Data;
 using RazorPages.Models;
 using System.ComponentModel.DataAnnotations;
 using System.IdentityModel.Tokens.Jwt;
@@ -16,6 +17,13 @@ namespace RazorPages.Controllers
 {
     public class LoginController : Controller
     {
+        private readonly MoviesContext _context;
+
+        public LoginController(MoviesContext context)
+        {
+            _context = context;
+        }
+
         public IActionResult Index()
         {
             return View();
@@ -23,13 +31,13 @@ namespace RazorPages.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SignIn(User user)
+        public async Task<IActionResult> SignIn([LoginFormValidation] UserForm userForm)
         {
             if (!ModelState.IsValid)
-                return View("Index", user);
+                return View("Index", userForm);
 
             var claims = new List<Claim>();
-            claims.AddRange(user.Roles.Select(x => new Claim(ClaimTypes.Role, x)));
+            claims.AddRange(userForm.Roles.Select(x => new Claim(ClaimTypes.Role, x)));
             var jwt = Auth.GenerateJwt(claims);
             Auth.AddTokenToCookies(HttpContext, Auth.ConvertJwtToToken(jwt));
             return RedirectToAction("Index", "Movies");
@@ -40,6 +48,26 @@ namespace RazorPages.Controllers
         public async Task<IActionResult> SignOut()
         {
             HttpContext.Response.Cookies.Delete("Token");
+            return RedirectToAction("Index", "Login");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SignUp([RegisterFormValidation] UserForm userForm)
+        {
+            if (!ModelState.IsValid)
+                return View("Index", userForm);
+
+            foreach (var role in userForm.Roles)
+            {
+                _context.Add(new User()
+                {
+                    Login = userForm.Login,
+                    Password = userForm.Password,
+                    Role = role
+                });
+            }
+            await _context.SaveChangesAsync();
             return RedirectToAction("Index", "Login");
         }
     }

@@ -1,50 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using RazorPages.Controllers.Api;
+using RazorPages.Data;
+using RazorPages.Models;
 using System.ComponentModel.DataAnnotations;
 
 namespace RazorPages.Controllers.Utils
 {
-    public static class UsersData
-    {
-        public static Dictionary<string, User> Users = new()
-        {
-            ["alice"] = new User("alice", "123", new List<string> { "User" }),
-            ["bob"] = new User("bob", "456", new List<string> { "User", "Admin" })
-        };
-    }
-
-    public class UserValidation : ValidationAttribute
-    {
-        public override bool IsValid(object? value)
-        {
-            if (value is User inputUser)
-            {
-                var loginIsValid = UsersData.Users.ContainsKey(inputUser.Login ?? "");
-                if (!loginIsValid)
-                {
-                    ErrorMessage = "Login does not exist";
-                    return false;
-                }
-
-                var obtainedUser = UsersData.Users[inputUser.Login];
-                var passwordIsValid = obtainedUser.Password == inputUser.Password;
-                if (!passwordIsValid)
-                {
-                    ErrorMessage = "Password is incorrect";
-                    return false;
-                }
-
-                inputUser.Roles = obtainedUser.Roles;
-                return true;
-            }
-            else
-                return false;
-        }
-    }
-
-
-    [UserValidation]
-    public class User
+    public class UserForm
     {
         [BindProperty]
         [Required]
@@ -56,7 +19,52 @@ namespace RazorPages.Controllers.Utils
 
         public List<string>? Roles { get; set; }
 
-        public User() { }
-        public User(string login, string password, List<string> roles) { Login = login; Password = password; Roles = roles; }
+        public UserForm() { }
+        public UserForm(string login, string password, List<string> roles) { Login = login; Password = password; Roles = roles; }
+    }
+
+    public class LoginFormValidation : ValidationAttribute
+    {
+        protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
+        {
+            var _context = validationContext.GetService(typeof(MoviesContext)) as MoviesContext;
+            if (value is UserForm userForm)
+            {
+                var foundUsers = _context.Users.Where(u => u.Login == userForm.Login).ToList();
+
+                if (!foundUsers.Any())
+                    return new ValidationResult("Login does not exist");
+
+                var hash = Auth.HashPassword(userForm.Password);
+                if (hash != foundUsers.First().Password)
+                    return new ValidationResult("Password is incorrect");
+
+                userForm.Password = hash;
+                userForm.Roles = foundUsers.Select(u => u.Role).ToList();
+                return ValidationResult.Success;
+            }
+            else
+                return new ValidationResult("User attributes are incorrect");
+        }
+    }
+
+    public class RegisterFormValidation : ValidationAttribute
+    {
+        protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
+        {
+            var _context = validationContext.GetService(typeof(MoviesContext)) as MoviesContext;
+            if (value is UserForm userForm)
+            {
+                if (_context.Users.Where(u => u.Login == userForm.Login).Any())
+                {
+                    return new ValidationResult("Login already exists");
+                }
+                userForm.Password = Auth.HashPassword(userForm.Password);
+                userForm.Roles = new List<string>() { "User" };
+                return ValidationResult.Success;
+            }
+            else
+                return new ValidationResult("User attributes are incorrect");
+        }
     }
 }

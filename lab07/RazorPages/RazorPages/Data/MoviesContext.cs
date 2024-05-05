@@ -9,6 +9,7 @@ namespace RazorPages.Data
         public DbSet<MoviePerson> MoviePersons { get; set; } = default!;
         public DbSet<Movie> Movies { get; set; } = default!;
         public DbSet<Person> Persons { get; set; } = default!;
+        public DbSet<User> Users { get; set; } = default!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -20,6 +21,7 @@ namespace RazorPages.Data
             modelBuilder.ApplyConfiguration(new MoviePersonConfiguration());
             modelBuilder.ApplyConfiguration(new MovieConfiguration());
             modelBuilder.ApplyConfiguration(new PersonConfiguration());
+            modelBuilder.ApplyConfiguration(new UserConfiguration());
 
             modelBuilder.Entity<Movie>()
                 .HasMany(e => e.Persons)

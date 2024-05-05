@@ -1,6 +1,7 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace RazorPages.Controllers.Utils
@@ -52,5 +53,17 @@ namespace RazorPages.Controllers.Utils
         public static string? GetTokenFromCookies(HttpContext context) => context.Request.Cookies["Token"];
 
         public static void DeleteTokenFromCookies(HttpContext context) => context.Response.Cookies.Delete("Token");
+
+        public static string HashPassword(string password)
+        {
+            byte[] bytes = Encoding.UTF8.GetBytes(password);
+            byte[] hash = SHA256.Create().ComputeHash(bytes);
+            StringBuilder result = new();
+            for (int i = 0; i < hash.Length; i++)
+            {
+                result.Append(hash[i].ToString("x2"));
+            }
+            return result.ToString();
+        }
     }
 }

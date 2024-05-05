@@ -2,7 +2,7 @@
 using RazorPages.Controllers.Api;
 using System.ComponentModel.DataAnnotations;
 
-namespace RazorPages.Controllers.Data
+namespace RazorPages.Controllers.Utils
 {
     public static class UsersData
     {

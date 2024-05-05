@@ -12,15 +12,24 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Linq;
+using RazorPages.Controllers.Utils;
 using RazorPages.Data;
 using RazorPages.Models;
 
 namespace RazorPages.Controllers
 {
+    public class MoviesIndexData
+    {
+        public IEnumerable<Movie> Movies { get; set; }
+        public int CurrentPage { get; set; }
+        public int PageSize { get; set; }
+        public int TotalMoviesNumber { get; set; }
+    }
+
     public class MoviesController : Controller
     {
         private readonly MoviesContext _context;
-        public List<Movie> Movies;
+        public int PageSize = 15;
 
         public MoviesController(MoviesContext context)
         {
@@ -28,11 +37,24 @@ namespace RazorPages.Controllers
         }
 
         // GET: Movies
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? page)
         {
-            return _context.Movies != null ?
-                        View(await _context.Movies.ToListAsync()) :
-                        Problem("Entity set 'MoviesContext.Movies'  is null.");
+            var pageValue = page ?? 1;
+            if (_context.Movies != null)
+            {
+                var data = new MoviesIndexData
+                {
+                    CurrentPage = pageValue,
+                    PageSize = PageSize,
+                    TotalMoviesNumber = _context.Movies.Count(),
+                    Movies = await _context.Movies.OrderBy(x => x.Id).Skip((pageValue - 1) * PageSize).Take(PageSize).ToListAsync()
+                };
+                return View(data);
+            }
+            else
+            {
+                return Problem("Entity set 'MoviesContext.Movies'  is null."); ;
+            }
         }
 
         // GET: Movies/Details/5

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using RazorPages.Data;
@@ -11,9 +12,18 @@ using RazorPages.Models;
 
 namespace RazorPages.Controllers
 {
+    public class PersonsIndexData
+    {
+        public IEnumerable<Person> Persons { get; set; }
+        public int CurrentPage { get; set; }
+        public int PageSize { get; set; }
+        public int TotalPersonsNumber { get; set; }
+    }
+
     public class PersonsController : Controller
     {
         private readonly MoviesContext _context;
+        public int PageSize = 15;
 
         public PersonsController(MoviesContext context)
         {
@@ -21,11 +31,24 @@ namespace RazorPages.Controllers
         }
 
         // GET: Persons
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? page)
         {
-              return _context.Persons != null ? 
-                          View(await _context.Persons.ToListAsync()) :
-                          Problem("Entity set 'MoviesContext.Persons'  is null.");
+            var pageValue = page ?? 1;
+            if (_context.Persons != null)
+            {
+                var data = new PersonsIndexData
+                {
+                    CurrentPage = pageValue,
+                    PageSize = PageSize,
+                    TotalPersonsNumber = _context.Persons.Count(),
+                    Persons = await _context.Persons.OrderBy(x => x.Id).Skip((pageValue - 1) * PageSize).Take(PageSize).ToListAsync()
+                };
+                return View(data);
+            }
+            else
+            {
+                return Problem("Entity set 'MoviesContext.Persons'  is null."); ;
+            }
         }
 
         // GET: Persons/Details/5

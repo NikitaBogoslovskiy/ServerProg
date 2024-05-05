@@ -1,4 +1,4 @@
-﻿@model IEnumerable<RazorPages.Models.Movie>
+﻿@model RazorPages.Controllers.MoviesIndexData
 
 @{
     ViewData["Title"] = "Movies";
@@ -14,19 +14,19 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Title)
+                Title
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.VoteAverage)
+                Average Vote
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.VoteCount)
+                Votes Number
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.ToList().Take(100)) {
+        @foreach (var item in Model.Movies) {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Title)
@@ -58,3 +58,18 @@
 }
     </tbody>
 </table>
+
+@if (Model.CurrentPage > 1)
+{
+    <a asp-action="Index" asp-route-page="@(Model.CurrentPage - 1)" class="btn btn-outline-dark">
+        <i class="glyphicon glyphicon-chevron-left"></i>
+        Назад
+    </a>
+}
+@if (Model.TotalMoviesNumber > Model.CurrentPage * Model.PageSize)
+{
+    <a asp-action="Index" asp-route-page="@(Model.CurrentPage + 1)" class="btn btn-outline-dark">
+        Вперед
+        <i class="glyphicon glyphicon-chevron-right"></i>
+    </a>
+}

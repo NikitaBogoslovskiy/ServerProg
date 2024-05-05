@@ -3,7 +3,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace RazorPages.Controllers.Data
+namespace RazorPages.Controllers.Utils
 {
     public static class Auth
     {

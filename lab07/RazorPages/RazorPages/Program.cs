@@ -4,7 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using NuGet.Common;
 using RazorPages.Controllers;
-using RazorPages.Controllers.Data;
+using RazorPages.Controllers.Utils;
 using RazorPages.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;

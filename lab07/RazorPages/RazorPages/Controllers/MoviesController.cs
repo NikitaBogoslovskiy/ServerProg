@@ -24,12 +24,13 @@ namespace RazorPages.Controllers
         public int CurrentPage { get; set; }
         public int PageSize { get; set; }
         public int TotalMoviesNumber { get; set; }
+        public string? Search { get; set; }
     }
 
     public class MoviesController : Controller
     {
         private readonly MoviesContext _context;
-        public int PageSize = 15;
+        private int pageSize = 15;
 
         public MoviesController(MoviesContext context)
         {
@@ -37,17 +38,24 @@ namespace RazorPages.Controllers
         }
 
         // GET: Movies
-        public async Task<IActionResult> Index(int? page)
+        public async Task<IActionResult> Index(int? page, string? search)
         {
             var pageValue = page ?? 1;
             if (_context.Movies != null)
             {
-                var data = new MoviesIndexData
+                IQueryable<Movie> allQuery = _context.Movies;
+                if (search != null)
                 {
+                    allQuery = allQuery.Where(x => x.Title.ToLower().Contains(search.ToLower()));
+                }
+                var portionQuery = allQuery.OrderBy(x => x.Id).Skip((pageValue - 1) * pageSize).Take(pageSize);
+                var data = new MoviesIndexData()
+                {
+                    PageSize = pageSize,
                     CurrentPage = pageValue,
-                    PageSize = PageSize,
-                    TotalMoviesNumber = _context.Movies.Count(),
-                    Movies = await _context.Movies.OrderBy(x => x.Id).Skip((pageValue - 1) * PageSize).Take(PageSize).ToListAsync()
+                    TotalMoviesNumber = allQuery.Count(),
+                    Search = search,
+                    Movies = await portionQuery.ToListAsync()
                 };
                 return View(data);
             }

@@ -18,12 +18,13 @@ namespace RazorPages.Controllers
         public int CurrentPage { get; set; }
         public int PageSize { get; set; }
         public int TotalPersonsNumber { get; set; }
+        public string? Search { get; set; }
     }
 
     public class PersonsController : Controller
     {
         private readonly MoviesContext _context;
-        public int PageSize = 15;
+        private int pageSize = 15;
 
         public PersonsController(MoviesContext context)
         {
@@ -31,17 +32,24 @@ namespace RazorPages.Controllers
         }
 
         // GET: Persons
-        public async Task<IActionResult> Index(int? page)
+        public async Task<IActionResult> Index(int? page, string? search)
         {
             var pageValue = page ?? 1;
             if (_context.Persons != null)
             {
-                var data = new PersonsIndexData
+                IQueryable<Person> allQuery = _context.Persons;
+                if (search != null)
                 {
+                    allQuery = allQuery.Where(x => x.Name.ToLower().Contains(search.ToLower()));
+                }
+                var portionQuery = allQuery.OrderBy(x => x.Id).Skip((pageValue - 1) * pageSize).Take(pageSize);
+                var data = new PersonsIndexData()
+                {
+                    PageSize = pageSize,
                     CurrentPage = pageValue,
-                    PageSize = PageSize,
-                    TotalPersonsNumber = _context.Persons.Count(),
-                    Persons = await _context.Persons.OrderBy(x => x.Id).Skip((pageValue - 1) * PageSize).Take(PageSize).ToListAsync()
+                    TotalPersonsNumber = allQuery.Count(),
+                    Search = search,
+                    Persons = await portionQuery.ToListAsync()
                 };
                 return View(data);
             }

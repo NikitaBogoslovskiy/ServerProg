@@ -28,7 +28,27 @@ namespace RazorPages.Controllers.Utils
             return "~/" + relativePath;
         }
 
+        public static string? GetImagePath(MemoryStream imageStream)
+        {
+            var fileName = Guid.NewGuid().ToString() + ".png";
+            var relativePath = Path.Combine(uploadsPath, fileName);
+            var fullPath = Path.GetFullPath(Path.Combine(rootFolder, relativePath));
+            using (var fileStream = new FileStream(fullPath, FileMode.Create))
+            {
+                imageStream.CopyTo(fileStream);
+            }
+            return "~/" + relativePath;
+        }
+
         public static void DeleteImage(string imagePath) => File.Delete(Path.GetFullPath(Path.Combine(rootFolder, imagePath[2..])));
+
+        public static string ConvertImageToBase64(string imagePath)
+        {
+            byte[] imageArray = File.ReadAllBytes(Path.GetFullPath(Path.Combine(rootFolder, imagePath[2..])));
+            return Convert.ToBase64String(imageArray);
+        }
+
+        public static MemoryStream ConvertBase64ToImageStream(string imageBase64) => new(Convert.FromBase64String(imageBase64));
 
         public class PersonForm
         {
@@ -36,6 +56,13 @@ namespace RazorPages.Controllers.Utils
             public string? Name { get; set; }
             public string? ImagePath { get; set; }
             public IFormFile? Image { get; set; }
+        }
+
+        public class PersonFormApi
+        {
+            public int Id { get; set; }
+            public string? Name { get; set; }
+            public string? ImageBase64 { get; set; }
         }
     }
 }

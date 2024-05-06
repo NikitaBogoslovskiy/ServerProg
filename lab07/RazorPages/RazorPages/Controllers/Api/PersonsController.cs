@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using RazorPages.Data;
 using RazorPages.Models;
+using static RazorPages.Controllers.Utils.Persons;
 
 namespace RazorPages.Controllers.Api
 {
@@ -49,15 +50,27 @@ namespace RazorPages.Controllers.Api
                 return NotFound();
             }
 
-            return Ok(person);
+            var personForm = new PersonFormApi()
+            {
+                Id = person.Id,
+                Name = person.Name,
+                ImageBase64 = string.IsNullOrEmpty(person.ImagePath) ? null : ConvertImageToBase64(person.ImagePath)
+            };
+            return Ok(personForm);
         }
 
         [Authorize(Roles = "Admin", AuthenticationSchemes = "Bearer")]
         [HttpPost("create")]
-        public async Task<IActionResult> Create(Person person)
+        public async Task<IActionResult> Create(PersonFormApi personForm)
         {
             if (ModelState.IsValid)
             {
+                var person = new Person()
+                {
+                    Id = personForm.Id,
+                    Name = personForm.Name,
+                    ImagePath = string.IsNullOrEmpty(personForm.ImageBase64) ? null : GetImagePath(ConvertBase64ToImageStream(personForm.ImageBase64))
+                };
                 person.Id = _context.Persons.Select(m => m.Id).Max() + 1;
                 _context.Add(person);
                 await _context.SaveChangesAsync();
@@ -68,19 +81,27 @@ namespace RazorPages.Controllers.Api
 
         [HttpPut("update/{id}")]
         [Authorize(Roles = "Admin", AuthenticationSchemes = "Bearer")]
-        public async Task<IActionResult> Edit(int? id, Person person)
+        public async Task<IActionResult> Edit(int? id, PersonFormApi personForm)
         {
-            person.Id = id.Value;
             if (ModelState.IsValid)
             {
+                personForm.Id = id.Value;
                 try
                 {
+                    var person = await _context.Persons.FirstOrDefaultAsync(m => m.Id == id);
+                    if (person == null)
+                        return NotFound();
+                    var imagePath = person.ImagePath;
+                    person.Name = personForm.Name;
+                    person.ImagePath = string.IsNullOrEmpty(personForm.ImageBase64) ? null : GetImagePath(ConvertBase64ToImageStream(personForm.ImageBase64));
                     _context.Update(person);
                     await _context.SaveChangesAsync();
+                    if (!string.IsNullOrEmpty(imagePath))
+                        DeleteImage(imagePath);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!PersonExists(person.Id))
+                    if (!PersonExists(personForm.Id))
                     {
                         return NotFound();
                     }
@@ -105,6 +126,7 @@ namespace RazorPages.Controllers.Api
             var person = await _context.Persons.FindAsync(id);
             if (person != null)
             {
+                var imagePath = person.ImagePath;
                 var mps = _context.MoviePersons.Where(x => x.PersonId == person.Id);
                 if (mps.Any())
                 {
@@ -113,6 +135,8 @@ namespace RazorPages.Controllers.Api
                 }
                 _context.Persons.Remove(person);
                 await _context.SaveChangesAsync();
+                if (!string.IsNullOrEmpty(imagePath))
+                    DeleteImage(imagePath);
                 return Ok();
             }
 

@@ -9,9 +9,11 @@ namespace RazorPages.Data.Configurations
         public void Configure(EntityTypeBuilder<User> builder)
         {
             builder.ToTable("user");
+            builder.Property(x => x.Id).HasColumnName("id");
             builder.Property(x => x.Login).HasColumnName("login");
             builder.Property(x => x.Password).HasColumnName("password");
             builder.Property(x => x.Role).HasColumnName("role");
+            builder.HasKey(x => x.Id);
         }
     }
 }

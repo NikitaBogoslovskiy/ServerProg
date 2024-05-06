@@ -11,6 +11,7 @@ namespace RazorPages.Data.Configurations
             builder.ToTable("person");
             builder.Property(x => x.Id).HasColumnName("person_id");
             builder.Property(x => x.Name).HasColumnName("person_name");
+            builder.Property(x => x.ImagePath).HasColumnName("image_path");
             builder.HasKey(x => x.Id);
         }
     }

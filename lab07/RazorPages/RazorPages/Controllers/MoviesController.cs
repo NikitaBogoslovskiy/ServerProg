@@ -104,7 +104,7 @@ namespace RazorPages.Controllers
                 movie.Id = _context.Movies.Select(m => m.Id).Max() + 1;
                 _context.Add(movie);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Details), new { movie.Id });
             }
             return View(movie);
         }
@@ -157,7 +157,7 @@ namespace RazorPages.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Details), new { id });
             }
             return View(movie);
         }

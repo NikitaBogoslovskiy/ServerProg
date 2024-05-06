@@ -62,6 +62,7 @@ namespace RazorPages.Controllers
             {
                 _context.Add(new User()
                 {
+                    Id = 0,
                     Login = userForm.Login,
                     Password = userForm.Password,
                     Role = role

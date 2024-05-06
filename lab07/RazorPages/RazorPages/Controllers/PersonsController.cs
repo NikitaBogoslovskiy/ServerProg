@@ -7,8 +7,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using RazorPages.Controllers.Utils;
 using RazorPages.Data;
 using RazorPages.Models;
+using static RazorPages.Controllers.Utils.Persons;
 
 namespace RazorPages.Controllers
 {
@@ -75,6 +77,8 @@ namespace RazorPages.Controllers
                 return NotFound();
             }
 
+            if (string.IsNullOrEmpty(person.ImagePath))
+                person.ImagePath = Persons.DefaultImagePath;
             return View(person);
         }
 
@@ -90,16 +94,21 @@ namespace RazorPages.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Create([Bind("Id,Name")] Person person)
+        public async Task<IActionResult> Create([Bind("Id,Name,Image")] PersonForm personForm)
         {
             if (ModelState.IsValid)
             {
-                person.Id = _context.Persons.Select(m => m.Id).Max() + 1;
+                var person = new Person()
+                {
+                    Id = _context.Persons.Select(m => m.Id).Max() + 1,
+                    Name = personForm.Name,
+                    ImagePath = Persons.GetImagePath(personForm.Image)
+                };
                 _context.Add(person);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Details), new { person.Id });
             }
-            return View(person);
+            return View(personForm);
         }
 
         // GET: Persons/Edit/5
@@ -116,7 +125,13 @@ namespace RazorPages.Controllers
             {
                 return NotFound();
             }
-            return View(person);
+            var personForm = new PersonForm()
+            {
+                Id = person.Id,
+                Name = person.Name,
+                ImagePath = string.IsNullOrEmpty(person.ImagePath) ? Persons.DefaultImagePath : person.ImagePath
+            };
+            return View(personForm);
         }
 
         // POST: Persons/Edit/5
@@ -125,19 +140,29 @@ namespace RazorPages.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Person person)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,ImagePath,Image")] PersonForm personForm)
         {
-            if (id != person.Id)
+            if (id != personForm.Id)
             {
                 return NotFound();
             }
 
             if (ModelState.IsValid)
             {
+                var imagePath = personForm.ImagePath;
+                var person = new Person()
+                {
+                    Id = personForm.Id,
+                    Name = personForm.Name,
+                    ImagePath = Persons.GetImagePath(personForm.Image)
+                };
+
                 try
                 {
                     _context.Update(person);
                     await _context.SaveChangesAsync();
+                    if (imagePath != null && imagePath != Persons.DefaultImagePath)
+                        Persons.DeleteImage(imagePath);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -150,9 +175,9 @@ namespace RazorPages.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Details), new { id });
             }
-            return View(person);
+            return View(personForm);
         }
 
         // GET: Persons/Delete/5
@@ -171,6 +196,8 @@ namespace RazorPages.Controllers
                 return NotFound();
             }
 
+            if (string.IsNullOrEmpty(person.ImagePath))
+                person.ImagePath = Persons.DefaultImagePath;
             return View(person);
         }
 
@@ -187,6 +214,7 @@ namespace RazorPages.Controllers
             var person = await _context.Persons.FindAsync(id);
             if (person != null)
             {
+                var imagePath = person.ImagePath;
                 var mps = _context.MoviePersons.Where(x => x.PersonId == person.Id);
                 if (mps.Any())
                 {
@@ -195,6 +223,8 @@ namespace RazorPages.Controllers
                 }
                 _context.Persons.Remove(person);
                 await _context.SaveChangesAsync();
+                if (!string.IsNullOrEmpty(imagePath))
+                    Persons.DeleteImage(imagePath);
             }
            
             return RedirectToAction(nameof(Index));

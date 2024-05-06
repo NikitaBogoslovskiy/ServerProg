@@ -13,7 +13,7 @@ namespace RazorPages.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite(@"Data source=movies.db");
+            optionsBuilder.UseSqlite(@"Data source=wwwroot/db/movies.db");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

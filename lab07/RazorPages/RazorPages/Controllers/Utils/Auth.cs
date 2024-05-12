@@ -6,6 +6,11 @@ using System.Text;
 
 namespace RazorPages.Controllers.Utils
 {
+    public class Token
+    {
+        public string? Content { get; set; }
+    }
+
     public static class Auth
     {
         private static string issuer = "AuthServer";

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing.Printing;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
@@ -30,10 +31,16 @@ namespace RazorPages.Controllers.Api
         }
 
         [HttpGet()]
-        public async Task<IActionResult> Index([FromQuery] int count = 100, [FromQuery] int offset = 0)
+        public async Task<IActionResult> Index([FromQuery] string? search = null, [FromQuery] int count = 100, [FromQuery] int offset = 0)
         {
-            var movies = await _context.Movies.ToListAsync();
-            return Ok(movies.Skip(offset).Take(count).Select(m => new Movie
+            IQueryable<Movie> allQuery = _context.Movies.OrderBy(x => x.Id);
+            if (!string.IsNullOrEmpty(search))
+            {
+                allQuery = allQuery.Where(x => x.Title.ToLower().Contains(search.ToLower()));
+            }
+            var portionQuery = allQuery.Skip(offset).Take(count);
+            var movies = await portionQuery.ToListAsync();
+            return Ok(movies.Select(m => new Movie
             {
                 Id = m.Id,
                 Title = m.Title,

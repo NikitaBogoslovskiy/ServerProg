@@ -34,7 +34,7 @@ namespace RazorPages.Controllers.Api
             var claims = new List<Claim>();
             claims.AddRange(userForm.Roles.Select(x => new Claim(ClaimTypes.Role, x)));
             var jwt = Auth.GenerateJwt(claims, TimeSpan.FromDays(7));
-            return Ok(Auth.ConvertJwtToToken(jwt));
+            return Ok(new Token() { Content = Auth.ConvertJwtToToken(jwt) });
         }
 
         [HttpPost("register")]
